@@ -1,5 +1,5 @@
 terraform.tfstate*
-.secrets
+secrets
 .retry
 .idea
 .terraform
