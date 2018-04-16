@@ -29,8 +29,8 @@ Simply install aws, terraform and ansible following official documentation for y
 
 clone the repository on your local machine and access the directory
 ```bash
-$ git clone https://github.com 
-$ cd
+$ git clone https://github.com/nroitero/terraform_aws_ansible
+$ cd terraform_aws_ansible
 ```
 install required plugins
 ```bash
