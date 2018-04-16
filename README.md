@@ -9,6 +9,8 @@ provision with ansible inside terraform to deploy a spring project
 
 **aws** - folder with terraform infrastructure files
 
+**imgs** - documentation images
+
 **secrets** - generated folder with keypair files
 
 **spring** - java project source
@@ -88,4 +90,6 @@ instead you can create and destroy instances in seperated .tf file
 
 *ex: aws/3rd_instance.tf.bak*
 
-
+### Info
+![aws diagram](imgs/diagram.png )
+![infrastructure graph](imgs/infrastructure_graph.png )
