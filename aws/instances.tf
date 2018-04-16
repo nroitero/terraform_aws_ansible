@@ -27,13 +27,14 @@ resource "aws_instance" "server" {
   }
 
   ##### test ebs detach attach with delay  ###DO NOT UNCOMMENT
-  #sleep ${count.index*120}
-  #  aws ec2 detach-volume --volume-id=${element(aws_ebs_volume.ebs.*.id,count.index)} --region=${var.region}
-  #    sleep 10
-  #    aws ec2 attach-volume --instance-id=${self.id} --volume-id=${element(aws_ebs_volume.ebs.*.id,count.index)} --device=/dev/xvdh --region=${var.region}
+  # sleep ${count.index*120}
+  #    aws ec2 detach-volume --volume-id=${element(aws_ebs_volume.ebs.*.id,count.index)} --region=${var.region}
+  #      sleep 1000
+  #      aws ec2 attach-volume --instance-id=${self.id} --volume-id=${element(aws_ebs_volume.ebs.*.id,count.index)} --device=/dev/xvdh --region=${var.region}
   provisioner "local-exec" {
     command = <<BAR
 ansible-galaxy install -r ansible/requirements.yml
+ 
   ansible-playbook -u ubuntu  --extra-vars 'hostname=app-${count.index}.${var.domain}' --private-key secrets/${module.ssh_key_pair.key_name}.pem -i '${self.public_ip},' ansible/master.yml ${var.ansible_verbosity}
 BAR
   }

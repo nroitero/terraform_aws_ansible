@@ -1,3 +1,4 @@
+#### test with ebs DO NOT UNCOMMENT
 # resource "aws_ebs_volume" "ebs" {
 #   availability_zone = "${data.aws_availability_zones.available.names[0]}"
 #   count             = "${var.server_count}"
