@@ -1,0 +1,40 @@
+resource "aws_instance" "db" {
+  tags {
+    Name = "app-test"
+  }
+
+  ami = "${data.aws_ami.image.id}"
+
+  iam_instance_profile   = "${ aws_iam_instance_profile.role.name }"
+  instance_type          = "t2.micro"
+  key_name               = "${module.ssh_key_pair.key_name}"
+  vpc_security_group_ids = ["${aws_security_group.default.id}"]
+  subnet_id              = "${aws_subnet.subnet.id}"
+  monitoring             = true
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt update",
+      "sudo apt install -y python",
+    ]
+  }
+
+  provisioner "local-exec" {
+    command = <<BAR
+
+BAR
+  }
+
+  connection {
+    user        = "ubuntu"
+    type        = "ssh"
+    agent       = "true"
+    timeout     = "10m"
+    private_key = "${file("secrets/${module.ssh_key_pair.key_name}.pem")}"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = ["ami"]
+  }
+}

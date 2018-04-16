@@ -1,0 +1,26 @@
+
+- parted:
+    device: /dev/xvdh
+    state: info
+  register: sdb_info
+
+- debug:
+    var: sdb_info["partitions"]|length == 0
+- debug:
+    var: sdb_info
+- parted:
+    device: /dev/xvdh
+    number: 1
+    state: present
+  when: sdb_info["partitions"]|length == 0
+- name: Create a ext4 filesystem on /dev/xvdh1 and check disk blocks
+  filesystem:
+    fstype: ext4
+    dev: /dev/xvdh1
+    opts: -cc
+  when: sdb_info["partitions"]|length == 0
+- mount:
+    src: /dev/xvdh1
+    fstype: ext4
+    path: /opt
+    state: mounted

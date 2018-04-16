@@ -1,0 +1,5 @@
+- name: Add the user 'deploy'
+  user:
+    name: deploy
+    comment: ansible deployment user
+    group: admin

@@ -1,0 +1,23 @@
+- hosts: all
+  become: true
+  pre_tasks:
+    - include: apt.yml
+    # - include: hostname.yml
+  #   # - include: ebs.yml
+
+  roles:
+    - geerlingguy.security
+    - geerlingguy.ntp
+    - role: geerlingguy.java
+      when: "ansible_os_family == 'Debian'"
+      java_packages:
+        - openjdk-8-jdk-headless
+    - role: geerlingguy.java
+      when: "ansible_os_family == 'RedHat'"
+      java_packages:
+        - java-1.8.0-openjdk
+    - gantsign.maven
+
+  post_tasks:
+    - include: spring.yml
+    - include: service.yml

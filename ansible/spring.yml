@@ -1,0 +1,10 @@
+- name: copy /opt/spring folder
+  copy: src=../spring/ dest=/opt/spring
+
+
+- name: generate .jar file
+  shell: mvn package
+  async: 5184000
+  poll: 0
+  args:
+    chdir: /opt/spring
