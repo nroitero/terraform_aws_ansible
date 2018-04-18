@@ -1,7 +1,7 @@
 [Unit]
 Description=My Webapp Java Service
 [Service]
-User=root
+User=deploy
 WorkingDirectory=/opt/spring/target
 ExecStart=/opt/spring/run.sh
 SuccessExitStatus=143

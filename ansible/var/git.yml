@@ -1,0 +1,12 @@
+git_config:
+  color:
+    diff: auto
+    branch: auto
+    status: auto
+    interactive: auto
+  push:
+    default: matching
+git_repositories:
+  - repo: https://github.com/nroitero/java_terraform_app_example
+    dest: /opt/spring
+    owner: deploy

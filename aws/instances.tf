@@ -3,18 +3,15 @@ data "aws_availability_zones" "available" {}
 resource "aws_instance" "server" {
   tags {
     Name = "app-${count.index}"
-
-    # Role = "vpn"
   }
 
   ami = "${data.aws_ami.image.id}"
 
   # availability_zone      = "${data.aws_availability_zones.available.names[0]}"
-  iam_instance_profile   = "${ aws_iam_instance_profile.role.name }"
   instance_type          = "t2.micro"
   key_name               = "${module.ssh_key_pair.key_name}"
   vpc_security_group_ids = ["${aws_security_group.default.id}"]
-  subnet_id              = "${aws_subnet.subnet.id}"
+  subnet_id              = "${aws_subnet.private.id}"
   monitoring             = true
   count                  = "${var.server_count}"
 
@@ -26,20 +23,11 @@ resource "aws_instance" "server" {
     ]
   }
 
-  ##### test ebs detach attach with delay  ###DO NOT UNCOMMENT
-  # sleep ${count.index*120}
-  #    aws ec2 detach-volume --volume-id=${element(aws_ebs_volume.ebs.*.id,count.index)} --region=${var.region}
-  #      sleep 1000
-  #      aws ec2 attach-volume --instance-id=${self.id} --volume-id=${element(aws_ebs_volume.ebs.*.id,count.index)} --device=/dev/xvdh --region=${var.region}
+  #### use of aws command line tool to solve https://github.com/hashicorp/terraform/issues/2957
+  #### unmount volume from old instance and mount it on new one before running ansible
   provisioner "local-exec" {
-    command = <<BAR
-ansible-galaxy install -r ansible/requirements.yml
- 
-  ansible-playbook -u ubuntu  --extra-vars 'hostname=app-${count.index}.${var.domain}' --private-key secrets/${module.ssh_key_pair.key_name}.pem -i '${self.public_ip},' ansible/master.yml ${var.ansible_verbosity}
-BAR
+    command = "tools/provision.sh  ${var.with_volume_attached} ${self.id} ${var.region} ${count.index} ${var.domain} ${module.ssh_key_pair.key_name} ${self.public_ip} ${var.ansible_verbosity}  ${  length(aws_ebs_volume.ebs.*.id) > 0   ? element(aws_ebs_volume.ebs.*.id,count.index) : ""}"
   }
-
-  # echo -e \"[default]\n${self.public_ip} ansible_connection=ssh ansible_ssh_user=root\" 
 
   connection {
     user        = "ubuntu"
@@ -48,6 +36,7 @@ BAR
     timeout     = "10m"
     private_key = "${file("secrets/${module.ssh_key_pair.key_name}.pem")}"
   }
+
   lifecycle {
     create_before_destroy = true
     ignore_changes        = ["ami"]

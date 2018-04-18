@@ -1,5 +1,12 @@
+- name: Ensure group "deploy" exists
+  group:
+    name: deploy
+    state: present
+    
 - name: Add the user 'deploy'
   user:
     name: deploy
-    comment: ansible deployment user
-    group: admin
+    comment: creating a user for running the webapp
+    group: deploy
+    create_home: no
+    shell: /usr/bin/bash

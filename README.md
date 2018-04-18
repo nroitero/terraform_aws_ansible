@@ -3,17 +3,20 @@
 provision with ansible inside terraform to deploy a spring project
 
 
-## Decisions
-I choosed to create the 2 server with a count variable because it was making it more interesting to work with variables
+---
+## Notes
 
-I added the [terraform-aws-key-pair](https://github.com/cloudposse/terraform-aws-key-pair) module to automate the keypair process
+- I choosed to create the 2 server with a count variable because it was more challenging
 
-### reason for choices
+- I added the [terraform-aws-key-pair](https://github.com/cloudposse/terraform-aws-key-pair) module to automate the keypair process
 
-- ansible - because of the simplicity of it
-- aws - because I was interested in testing it
+- ami images are searched to be last ubuntu xenial from canonical
 
-I created a check waiting for the webpage to be available therefore previous instance will be destroyed only when new is online (avoid downtime)
+- *with_volume_attached* : boolean variable, set to true to attach a 1go volume to /opt (allow to store data between instances) 
+
+- created a check waiting for the webpage to be available therefore previous instance will be destroyed only when new is online (avoid downtime)
+- ansible clone the java source from [java_terraform_app_example](https://github.com/nroitero/java_terraform_app_example)
+
 
 ---
 ## Structure
@@ -26,7 +29,7 @@ I created a check waiting for the webpage to be available therefore previous ins
 
 **secrets** - generated folder with keypair files
 
-**spring** - java project source
+**tools** contains various shell scripts 
 
 ---
 ## Install prerequisites
@@ -48,14 +51,14 @@ $ git clone https://github.com/nroitero/terraform_aws_ansible
 $ cd terraform_aws_ansible
 ```
 
-
-Before creating the infrastructure, we need to install the plugins for Terraform by typing ‘terraform init
+Before creating the infrastructure, we need to install the plugins for Terraform by typing 
 
 ```bash
 $ terraform init aws
 ```
+## Credentials
 
-create an amazon account if not already
+create an amazon account if you don't have already one
 
 after signin in your AWS Management Console, go to “Identity and Access Management – IAM” section:
 
@@ -79,7 +82,7 @@ Next, click on “Review” then “Create User“:
 ![iam keys](imgs/iam-keys.png )
 
 
-Copy to clipboard the Access Key ID and Secret Access Key, then set them to ~/.aws/credentials by running the commands below and filling the appropriate fields
+Copy to clipboard the Access Key ID and Secret Access Key, then set them to ~/.aws/credentials by running the command below and filling the appropriate fields (only credential values matters)
 
 ```bash
 $ aws configure
@@ -90,18 +93,20 @@ $ aws configure
 ---
 ## Usage
 
-to check your changes before
-
+to check your changes before applying run
+```bash
+$ terraform plan aws  
+```
 Apply the configuration with:
 
 ```bash
 $ terraform apply aws  
 ```
-or
+or if you want to skip confirmation
 ```bash
-$ terraform apply aws -auto-approve  # if you want to skip confirmation
+$ terraform apply -auto-approve aws 
 ```
-and wait for the magic
+and wait for the command to complete
 
 ### first time run:
 
@@ -140,3 +145,9 @@ instead you can create and destroy instances in seperated .tf file
 ## Info
 ![aws diagram](imgs/diagram.png )
 ![infrastructure graph](imgs/infrastructure_graph.png )
+
+
+## todo
+- create roles and policies
+- add ssl (add route 53 for letsencrypt  )
+- improve the java app to display relevant data

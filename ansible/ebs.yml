@@ -3,11 +3,6 @@
     device: /dev/xvdh
     state: info
   register: sdb_info
-
-- debug:
-    var: sdb_info["partitions"]|length == 0
-- debug:
-    var: sdb_info
 - parted:
     device: /dev/xvdh
     number: 1

@@ -2,9 +2,10 @@
   become: true
   pre_tasks:
     - include: apt.yml
-    # - include: hostname.yml
-  #   # - include: ebs.yml
-
+    - include: user.yml
+    - include: hostname.yml
+    - include: ebs.yml
+      when : ebs
   roles:
     - geerlingguy.security
     - geerlingguy.ntp
@@ -17,7 +18,11 @@
       java_packages:
         - java-1.8.0-openjdk
     - gantsign.maven
+    - franklinkim.git
+
 
   post_tasks:
-    - include: spring.yml
+    - include: generate.yml
     - include: service.yml
+  vars_files:
+    - var/git.yml

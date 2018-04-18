@@ -5,4 +5,4 @@ secrets
 .terraform
 .vscode
 ansible/*.retry
-spring/target
+spring

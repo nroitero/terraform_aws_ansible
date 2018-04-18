@@ -7,11 +7,6 @@
 - name: installing repo for Java 8 in Ubuntu
   apt_repository: repo='ppa:openjdk-r/ppa'
 
-# - name: Install latest version of "openjdk-8-jdk-headless"
-#   apt:
-#     name: openjdk-8-jdk-headless
-#     state: latest
-    
 - name: Upgrade all packages to the latest version
   apt:
     name: "*"

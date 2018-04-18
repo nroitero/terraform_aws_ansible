@@ -1,6 +1,6 @@
 resource "aws_elb" "elb" {
   name                        = "load-balancer"
-  subnets                     = ["${aws_subnet.subnet.id}"]
+  subnets                     = ["${aws_subnet.private.id}"]
   security_groups             = ["${aws_security_group.elb.id}"]
   instances                   = ["${aws_instance.server.*.id}"]
   connection_draining         = true
@@ -25,7 +25,7 @@ resource "aws_elb" "elb" {
 resource "aws_security_group" "elb" {
   name        = "security_elb"
   description = "load balancer security settings"
-  vpc_id      = "${aws_vpc.default.id}"
+  vpc_id      = "${aws_vpc.main.id}"
 
   # HTTP access from anywhere
   ingress {

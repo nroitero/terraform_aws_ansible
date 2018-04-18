@@ -1,11 +1,9 @@
 resource "aws_instance" "db" {
   tags {
-    Name = "app-test"
+    Name = "app-db"
   }
 
   ami = "${data.aws_ami.image.id}"
-
-  iam_instance_profile   = "${ aws_iam_instance_profile.role.name }"
   instance_type          = "t2.micro"
   key_name               = "${module.ssh_key_pair.key_name}"
   vpc_security_group_ids = ["${aws_security_group.default.id}"]
@@ -22,7 +20,7 @@ resource "aws_instance" "db" {
   provisioner "local-exec" {
     command = <<BAR
 ansible-galaxy install -r ansible/requirements.yml
-ansible-playbook -u ubuntu  --extra-vars 'hostname=app-test.${var.domain}' --private-key secrets/${module.ssh_key_pair.key_name}.pem -i '${self.public_ip},' ansible/mysql.yml ${var.ansible_verbosity}
+ansible-playbook -u ubuntu  --extra-vars 'hostname=app-db.${var.domain}' --private-key secrets/${module.ssh_key_pair.key_name}.pem -i '${self.public_ip},' ansible/mysql.yml ${var.ansible_verbosity}
 BAR
   }
 
