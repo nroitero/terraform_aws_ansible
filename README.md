@@ -161,3 +161,4 @@ instead you can create and destroy instances in seperated .tf file
 - create roles and policies
 - add ssl (add route 53 for letsencrypt  )
 - improve the java app to display relevant data
+- make it works on centos

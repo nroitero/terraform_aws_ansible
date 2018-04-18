@@ -9,14 +9,17 @@
   roles:
     - geerlingguy.security
     - geerlingguy.ntp
+  
     - role: geerlingguy.java
       when: "ansible_os_family == 'Debian'"
       java_packages:
         - openjdk-8-jdk-headless
+
     - role: geerlingguy.java
       when: "ansible_os_family == 'RedHat'"
       java_packages:
         - java-1.8.0-openjdk
+  
     - gantsign.maven
     - franklinkim.git
 
@@ -24,5 +27,6 @@
   post_tasks:
     - include: generate.yml
     - include: service.yml
+    - include: check.yml
   vars_files:
     - var/git.yml

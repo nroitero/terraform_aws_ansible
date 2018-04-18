@@ -7,7 +7,7 @@ resource "aws_elb" "elb" {
   connection_draining_timeout = 400
 
   listener {
-    instance_port     = 80
+    instance_port     = 8888
     instance_protocol = "http"
     lb_port           = 80
     lb_protocol       = "http"
@@ -17,7 +17,7 @@ resource "aws_elb" "elb" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 3
-    target              = "HTTP:80/"
+    target              = "HTTP:8888/"
     interval            = 5
   }
 }

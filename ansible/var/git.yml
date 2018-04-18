@@ -10,3 +10,4 @@ git_repositories:
   - repo: https://github.com/nroitero/java_terraform_app_example
     dest: /opt/spring
     owner: deploy
+    force: yes
