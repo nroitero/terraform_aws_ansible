@@ -2,7 +2,7 @@ terraform.tfstate*
 secrets
 .retry
 .idea
-.terraform
+.terraform*
 .vscode
 ansible/*.retry
 spring
