@@ -16,6 +16,16 @@ provision with ansible inside terraform to deploy a spring project
 
 - created a check waiting for the webpage to be available therefore previous instance will be destroyed only when new is online (avoid downtime)
 - ansible clone the java source from [java_terraform_app_example](https://github.com/nroitero/java_terraform_app_example)
+### terraform.tfvars file
+
+```bash
+region = "eu-west-1" # region where you want your vpc to run
+server_count = 2 # number of application servers do not decrease after first run
+domain = "example.com" # will create application server hostname type app-{count.index}.{domain}
+ansible_verbosity = "-vvv" # change ansible verbosity 
+with_volume_attached = true #  boolean variable, set to true to attach a 1go volume to /opt (allow to store data between instances) 
+
+```
 
 
 ---
